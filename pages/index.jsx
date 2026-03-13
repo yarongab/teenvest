@@ -151,7 +151,7 @@ const MusicPlayer = ({ audioSrc }) => {
 };
  
 // --- LANDING PAGE ---
-const LandingPage = ({ onStartChat }) => {
+const LandingPage = ({ onStartChat, onLegalPage }) => {
   const [visibleSections, setVisibleSections] = useState(new Set());
  
   useEffect(() => {
@@ -276,7 +276,24 @@ const LandingPage = ({ onStartChat }) => {
         }}>
           💰 התחל עכשיו — חינם!
         </button>
-        <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginTop: 30 }}>
+        <div style={{ marginTop: 30, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "8px 16px" }}>
+          {[
+            { id: "accessibility", label: "הצהרת נגישות" },
+            { id: "privacy", label: "מדיניות פרטיות" },
+            { id: "terms", label: "תנאי שירות" },
+            { id: "rights", label: "זכויות נושא מידע" },
+            { id: "copyright", label: "זכויות יוצרים" },
+          ].map(link => (
+            <button key={link.id} onClick={() => onLegalPage(link.id)} style={{
+              background: "none", border: "none", color: "rgba(255,255,255,0.5)",
+              fontSize: 11, cursor: "pointer", fontFamily: "'Rubik', sans-serif",
+              textDecoration: "underline", padding: 0,
+            }}>
+              {link.label}
+            </button>
+          ))}
+        </div>
+        <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginTop: 12 }}>
           © 2026 TEENVEST • כל הזכויות שמורות • למטרות חינוכיות בלבד
         </p>
       </div>
@@ -730,10 +747,264 @@ ${genderNote}
   );
 };
  
+// --- LEGAL PAGES ---
+const LEGAL_CONTENT = {
+  accessibility: {
+    title: "♿ הצהרת נגישות",
+    content: `TEENVEST מחויבת להנגשת האתר והשירותים הדיגיטליים שלה לכלל האוכלוסייה, לרבות אנשים עם מוגבלויות, בהתאם לתקן WCAG 2.2 ברמה AA.
+ 
+תקן נגישות:
+אתר זה נבנה ומתוחזק בהתאם לתקן הנגישות הבינלאומי Web Content Accessibility Guidelines (WCAG) 2.2 ברמת AA, המהווה את התקן העדכני ביותר שפורסם על ידי ארגון W3C. התקן מבוסס על ארבעה עקרונות יסוד:
+• ניתן לתפיסה (Perceivable) — מידע ורכיבי ממשק מוצגים באופן שכל המשתמשים יכולים לתפוס
+• ניתן להפעלה (Operable) — רכיבי ממשק וניווט ניתנים להפעלה על ידי כל המשתמשים
+• ניתן להבנה (Understandable) — מידע והפעלת ממשק ניתנים להבנה
+• עמיד (Robust) — תוכן מספיק עמיד כדי להתפרש באופן אמין על ידי טכנולוגיות עזר
+ 
+פעולות נגישות שננקטו:
+• תמיכה מלאה בניווט מקלדת
+• תאימות עם קוראי מסך ותוכנות טכנולוגיות עזר
+• טקסט חלופי (alt text) לכל התמונות והאלמנטים הוויזואליים
+• ניגודיות צבעים מספקת בין טקסט לרקע בהתאם לתקן
+• מבנה כותרות היררכי ותקין
+• תמיכה מלאה ב-RTL (כיוון ימין-לשמאל) לעברית
+• גופנים ברורים וקריאים בגודל מתאים
+• טפסים נגישים עם תוויות ברורות והנחיות שגיאה
+• אפשרות להשהות, לעצור או להשתיק תוכן אודיו (מוזיקת רקע)
+ 
+עדכון רציף:
+אנו מבצעים סקירות נגישות תקופתיות ומעדכנים את האתר בהתאם לשינויים בתקנים ובטכנולוגיות. עם כל עדכון של תקני WCAG, אנו מתחייבים לעדכן את האתר בהתאם בתוך 90 ימים.
+ 
+יצירת קשר בנושא נגישות:
+אם נתקלת בבעיית נגישות באתר או שיש לך הצעות לשיפור, נשמח לשמוע:
+📧 accessibility@teenvest.ai
+אנו מתחייבים לטפל בכל פנייה בנושא נגישות תוך 5 ימי עסקים.
+ 
+תאריך עדכון אחרון: מרץ 2026`
+  },
+ 
+  privacy: {
+    title: "🔒 מדיניות פרטיות",
+    content: `מדיניות פרטיות זו מתארת כיצד TEENVEST ("אנחנו", "שלנו") אוספת, משתמשת ומגינה על המידע שלך בעת השימוש באתר ובשירותים שלנו.
+ 
+מידע שאנחנו אוספים:
+• כתובת אימייל — לצורכי רישום וזיהוי
+• מגדר — להתאמה לשונית (לשון זכר/נקבה) בלבד
+• היסטוריית שיחות — נשמרת באופן מקומי במכשיר שלך בלבד (localStorage)
+ 
+מידע שאנחנו לא אוספים:
+• לא אוספים מידע פיננסי אמיתי (מספרי חשבון, כרטיסי אשראי)
+• לא אוספים מידע על מיקום מדויק
+• לא אוספים מידע ביומטרי
+• לא אוספים מידע רפואי
+ 
+שימוש במידע:
+המידע שנאסף משמש אך ורק ל:
+• התאמה אישית של חוויית השימוש (לשון פנייה)
+• שיפור השירות והתוכן
+• תקשורת בנוגע לעדכוני שירות (רק עם הסכמה)
+ 
+אחסון מידע:
+• פרטי הרישום (אימייל, מגדר) נשמרים במכשיר שלך בלבד באמצעות localStorage
+• שיחות עם הצ'אט מעובדות דרך שירותי AI (Anthropic Claude, Perplexity) — השיחות לא נשמרות בשרתים שלנו
+• אנחנו לא מנהלים מסד נתונים עם מידע אישי של משתמשים
+ 
+שיתוף מידע עם צדדים שלישיים:
+• אנו לא מוכרים, משכירים או מסחרים במידע אישי
+• שיחות מעובדות דרך Anthropic (Claude AI) ו-Perplexity בהתאם למדיניות הפרטיות שלהם
+• לא נשתף מידע אישי ללא הסכמה מפורשת, אלא אם נדרש על פי חוק
+ 
+בני נוער:
+• השירות מיועד לגילאי 15 ומעלה
+• אנו ממליצים בחום שבני נוער מתחת לגיל 18 ישתמשו בשירות בליווי והסכמת הורה או אפוטרופוס
+• אנו לא אוספים ביודעין מידע מילדים מתחת לגיל 15
+ 
+זכויותיך:
+ראה סעיף "זכויות נושא מידע" באתר
+ 
+עוגיות (Cookies):
+אתר זה אינו משתמש בעוגיות מעקב. אנו משתמשים אך ורק ב-localStorage לשמירת פרטי הרישום שלך במכשיר.
+ 
+שינויים במדיניות:
+אנו שומרים לעצמנו את הזכות לעדכן מדיניות זו. שינויים מהותיים יפורסמו באתר ויכנסו לתוקף 14 ימים לאחר הפרסום.
+ 
+יצירת קשר:
+📧 privacy@teenvest.ai
+ 
+תאריך עדכון אחרון: מרץ 2026`
+  },
+ 
+  terms: {
+    title: "📋 תנאי שירות",
+    content: `ברוכים הבאים ל-TEENVEST. בשימוש באתר ובשירותים שלנו, אתה מסכים לתנאים הבאים:
+ 
+1. תיאור השירות:
+TEENVEST הוא פלטפורמה חינוכית המספקת מידע פיננסי לבני נוער ומבוגרים צעירים באמצעות בינה מלאכותית. השירות כולל מידע על השקעות, יזמות דיגיטלית, וניהול כספים.
+ 
+2. הצהרת אחריות חינוכית — חשוב!
+⚠️ כל המידע המוצג ב-TEENVEST הוא למטרות חינוכיות והעשרה בלבד.
+• המידע אינו מהווה ייעוץ פיננסי, השקעתי, משפטי או מקצועי מכל סוג
+• אין לראות במידע המוצג המלצה לביצוע פעולה פיננסית כלשהי
+• כל החלטה פיננסית צריכה להיעשות לאחר התייעצות עם יועץ פיננסי מוסמך
+• בני נוער מתחת לגיל 18 נדרשים לקבל הסכמה ופיקוח של הורה או אפוטרופוס
+ 
+3. תנאי שימוש:
+• השירות מיועד לגילאי 15 ומעלה
+• אין להשתמש בשירות לצורכי ייעוץ השקעות אמיתי
+• אין להעתיק, לשכפל או להפיץ תכנים מהאתר ללא אישור
+• אין להשתמש בשירות באופן שעלול לפגוע בפעילות האתר
+ 
+4. הגבלת אחריות:
+• TEENVEST אינה אחראית לנזקים ישירים או עקיפים שייגרמו כתוצאה מהשימוש במידע באתר
+• התוצאות, התחזיות והחישובים המוצגים הם הערכות בלבד ואינם מבטיחים תוצאות עתידיות
+• ביצועי עבר אינם מעידים על ביצועים עתידיים בהשקעות
+• אנו עושים מאמץ לספק מידע מדויק ועדכני אך אין אנו מתחייבים לדיוק מוחלט
+ 
+5. שימוש ב-AI:
+• התשובות מופקות באמצעות בינה מלאכותית (Claude של Anthropic ו-Perplexity)
+• מערכות AI עלולות לטעות — יש לבדוק מידע קריטי ממקורות נוספים
+• השירות אינו תחליף ליועץ פיננסי אנושי מוסמך
+ 
+6. קניין רוחני:
+ראה סעיף "זכויות יוצרים" באתר.
+ 
+7. שינויים בשירות:
+אנו שומרים לעצמנו את הזכות לשנות, להשעות או להפסיק את השירות בכל עת.
+ 
+8. דין וסמכות שיפוט:
+תנאי שירות אלו כפופים לדיני מדינת ישראל. סמכות השיפוט הבלעדית נתונה לבתי המשפט המוסמכים בישראל.
+ 
+יצירת קשר:
+📧 admin@teenvest.ai
+ 
+תאריך עדכון אחרון: מרץ 2026`
+  },
+ 
+  rights: {
+    title: "👤 זכויות נושא מידע",
+    content: `בהתאם לחוק הגנת הפרטיות, התשמ"א-1981, ותקנות הגנת הפרטיות, עומדות לך הזכויות הבאות בנוגע למידע האישי שלך:
+ 
+1. הזכות לעיון:
+יש לך זכות לעיין במידע אישי המוחזק אצלנו אודותיך. הערה: מרבית המידע שלך נשמר במכשיר שלך בלבד (localStorage) ולא בשרתים שלנו.
+ 
+2. הזכות לתיקון:
+אם מצאת שמידע אישי אודותיך אינו נכון, שלם, ברור או מעודכן, אתה רשאי לבקש את תיקונו.
+ 
+3. הזכות למחיקה:
+אתה רשאי לבקש את מחיקת המידע האישי שלך. מאחר שהמידע נשמר במכשירך, תוכל למחוק אותו בעצמך:
+• בדפדפן: נקה את נתוני האתר (Clear site data) עבור teenvest.ai
+• או: מחק את localStorage דרך כלי המפתח (Developer Tools > Application > Local Storage)
+ 
+4. הזכות להגבלת עיבוד:
+אתה רשאי לבקש להגביל את עיבוד המידע שלך למטרות מסוימות בלבד.
+ 
+5. הזכות להתנגד:
+אתה רשאי להתנגד לעיבוד מידע אישי שלך, כולל התנגדות לקבלת דיוור שיווקי.
+ 
+6. הזכות לניוד מידע:
+אתה רשאי לבקש לקבל את המידע האישי שלך בפורמט מובנה, שמיש ומכונה-קריא.
+ 
+7. הזכות שלא להיות כפוף להחלטה אוטומטית:
+המלצות ההשקעה שלנו מבוססות על AI, אך הן למטרות חינוכיות בלבד ואינן מהוות החלטות מחייבות.
+ 
+הגשת בקשה:
+לצורך מימוש זכויותיך, פנה אלינו:
+📧 privacy@teenvest.ai
+ 
+אנו נטפל בבקשתך תוך 30 ימים מיום קבלתה.
+ 
+הגשת תלונה:
+אם אתה סבור שזכויותיך נפגעו, באפשרותך להגיש תלונה לרשות להגנת הפרטיות:
+🌐 www.gov.il/he/departments/the_privacy_protection_authority
+ 
+תאריך עדכון אחרון: מרץ 2026`
+  },
+ 
+  copyright: {
+    title: "©️ זכויות יוצרים",
+    content: `כל הזכויות שמורות ל-TEENVEST © 2026
+ 
+1. בעלות על תכנים:
+כל התכנים באתר TEENVEST, לרבות טקסטים, עיצוב, לוגו, גרפיקה, קוד תוכנה, ותכני AI, הם קניינה הרוחני של TEENVEST, אלא אם צוין אחרת.
+ 
+2. שימוש מותר:
+• צפייה ושימוש אישי, לא מסחרי, בתכני האתר
+• שיתוף קישורים לאתר
+• ציטוט קצר לצורכי ביקורת או לימוד, עם מתן קרדיט ל-TEENVEST
+ 
+3. שימוש אסור:
+• העתקה, שכפול, או הפצה של תכנים ללא אישור בכתב
+• שימוש מסחרי בתכנים או בשם המותג
+• שינוי, עיבוד או יצירת יצירות נגזרות מתכני האתר
+• הסרת סימני מסחר, זכויות יוצרים, או סימונים אחרים
+ 
+4. סימני מסחר:
+השם "TEENVEST", הלוגו, וכל סימני המסחר הקשורים הם קניינה של TEENVEST ואין להשתמש בהם ללא אישור מפורש.
+ 
+5. תכני צדדים שלישיים:
+• נתוני שוק ומידע פיננסי עדכני מסופקים באמצעות Perplexity AI
+• מנוע השיחה מופעל על ידי Claude של Anthropic
+• כל סימני המסחר של צדדים שלישיים שייכים לבעליהם
+ 
+6. תכנים שנוצרו על ידי AI:
+תכנים שנוצרו על ידי מנוע ה-AI כחלק מהשיחה עם המשתמש אינם מהווים ייעוץ מקצועי ואין להסתמך עליהם לצורך קבלת החלטות פיננסיות.
+ 
+7. דיווח על הפרה:
+אם אתה סבור שתוכן באתר מפר זכויות יוצרים שלך, פנה אלינו:
+📧 legal@teenvest.ai
+נא לכלול: תיאור התוכן המפר, הוכחת בעלות, ופרטי התקשרות.
+ 
+תאריך עדכון אחרון: מרץ 2026`
+  },
+};
+ 
+const LegalPage = ({ pageId, onBack }) => {
+  const page = LEGAL_CONTENT[pageId];
+  if (!page) return null;
+ 
+  return (
+    <div style={{ minHeight: "100vh", background: COLORS.cream, direction: "rtl", fontFamily: "'Rubik', sans-serif" }}>
+      <div style={{ background: COLORS.navy, padding: "16px 20px", display: "flex", alignItems: "center", gap: 12 }}>
+        <button onClick={onBack} style={{
+          background: "rgba(255,255,255,0.1)", border: "none",
+          borderRadius: 10, padding: "8px 14px", cursor: "pointer",
+          color: COLORS.white, fontSize: 14, fontFamily: "'Rubik', sans-serif",
+        }}>
+          ← חזרה
+        </button>
+        <Logo size={32} />
+        <span style={{ color: COLORS.white, fontWeight: 700, fontSize: 16 }}>TEENVEST</span>
+      </div>
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "30px 20px 60px" }}>
+        <h1 style={{ color: COLORS.navy, fontSize: 26, fontWeight: 800, marginBottom: 24 }}>{page.title}</h1>
+        <div style={{
+          background: COLORS.white, borderRadius: 20, padding: "30px 24px",
+          boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
+          color: COLORS.textDark, fontSize: 14, lineHeight: 2,
+          whiteSpace: "pre-wrap",
+        }}>
+          {page.content}
+        </div>
+        <div style={{ marginTop: 30, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 16 }}>
+          {Object.entries(LEGAL_CONTENT).filter(([id]) => id !== pageId).map(([id, p]) => (
+            <button key={id} onClick={() => onBack(id)} style={{
+              background: "none", border: `1px solid ${COLORS.grayLight}`, borderRadius: 20,
+              padding: "8px 16px", cursor: "pointer", fontSize: 12, color: COLORS.navy,
+              fontFamily: "'Rubik', sans-serif",
+            }}>
+              {p.title}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+ 
 // --- MAIN APP ---
 export default function TeenVestApp() {
   const [currentView, setCurrentView] = useState("landing");
   const [userProfile, setUserProfile] = useState(null);
+  const [legalPageId, setLegalPageId] = useState(null);
   
   const [audioUrl, setAudioUrl] = useState(null);
   
@@ -759,6 +1030,20 @@ export default function TeenVestApp() {
     setCurrentView("chat");
   };
  
+  const handleLegalPage = (pageId) => {
+    setLegalPageId(pageId);
+    setCurrentView("legal");
+  };
+ 
+  const handleLegalBack = (newPageId) => {
+    if (newPageId && typeof newPageId === "string") {
+      setLegalPageId(newPageId);
+    } else {
+      setCurrentView("landing");
+      setLegalPageId(null);
+    }
+  };
+ 
   return (
     <>
       {/* Google Fonts */}
@@ -778,9 +1063,11 @@ export default function TeenVestApp() {
  
       {/* Page Content */}
       {currentView === "landing" ? (
-        <LandingPage onStartChat={handleStartChat} />
+        <LandingPage onStartChat={handleStartChat} onLegalPage={handleLegalPage} />
       ) : currentView === "register" ? (
         <RegistrationPage onComplete={handleRegistration} onBack={() => setCurrentView("landing")} />
+      ) : currentView === "legal" ? (
+        <LegalPage pageId={legalPageId} onBack={handleLegalBack} />
       ) : (
         <ChatInterface onBack={() => setCurrentView("landing")} userProfile={userProfile} />
       )}
