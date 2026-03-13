@@ -46,15 +46,21 @@ const FEATURES = [
 ];
  
 // --- LOGO COMPONENT (SVG) ---
-const Logo = ({ size = 40 }) => (
-  <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100" height="100" rx="20" fill={COLORS.navy} />
-    <text x="50" y="38" textAnchor="middle" fill={COLORS.gold} fontSize="22" fontWeight="700" fontFamily="Rubik, sans-serif">TEEN</text>
-    <text x="50" y="62" textAnchor="middle" fill={COLORS.white} fontSize="22" fontWeight="700" fontFamily="Rubik, sans-serif">VEST</text>
-    <line x1="20" y1="45" x2="80" y2="45" stroke={COLORS.gold} strokeWidth="2" />
-    <path d="M50 70 L55 78 L62 72 L68 80" stroke={COLORS.gold} strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+const Logo = ({ size = 40 }) => {
+  const s = size;
+  const fontSize = Math.max(s * 0.22, 7);
+  const lineH = fontSize * 1.15;
+  const midY = s * 0.47;
+  return (
+    <svg width={s} height={s} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="20" fill={COLORS.navy} />
+      <text x="50" y={midY} textAnchor="middle" fill={COLORS.white} fontSize={fontSize} fontWeight="900" fontFamily="Arial, Helvetica, sans-serif" letterSpacing="2">TEEN</text>
+      <text x="50" y={midY + lineH} textAnchor="middle" fill={COLORS.gold} fontSize={fontSize} fontWeight="900" fontFamily="Arial, Helvetica, sans-serif" letterSpacing="2">VEST</text>
+      <line x1="18" y1="82" x2="82" y2="28" stroke={COLORS.gold} strokeWidth="1.2" strokeLinecap="round" opacity="0.2" />
+      <path d="M78 32 L84 26 L80 36" fill="none" stroke={COLORS.gold} strokeWidth="1" strokeLinecap="round" opacity="0.2" />
+    </svg>
+  );
+};
  
 // --- MUSIC PLAYER COMPONENT ---
 const MusicPlayer = ({ audioSrc }) => {
