@@ -108,7 +108,7 @@ const MusicPlayer = ({ audioSrc }) => {
     <>
       <audio ref={audioRef} src={audioSrc} loop preload="auto" />
       <div style={{
-        position: "fixed", bottom: 20, left: 20, zIndex: 9999,
+        position: "fixed", top: 20, left: 20, zIndex: 9999,
         display: "flex", alignItems: "center", gap: 8,
         background: "rgba(11, 60, 93, 0.9)", backdropFilter: "blur(10px)",
         borderRadius: 50, padding: "8px 14px",
