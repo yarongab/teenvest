@@ -284,20 +284,150 @@ const LandingPage = ({ onStartChat }) => {
   );
 };
  
+// --- REGISTRATION PAGE ---
+const RegistrationPage = ({ onComplete, onBack }) => {
+  const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("");
+  const [error, setError] = useState("");
+ 
+  const handleSubmit = () => {
+    if (!email.trim()) {
+      setError("נא להזין כתובת אימייל");
+      return;
+    }
+    if (!email.includes("@") || !email.includes(".")) {
+      setError("כתובת אימייל לא תקינה");
+      return;
+    }
+    if (!gender) {
+      setError("נא לבחור מגדר");
+      return;
+    }
+    setError("");
+    const userData = { email: email.trim(), gender };
+    try { localStorage.setItem("teenvest_user", JSON.stringify(userData)); } catch(e) {}
+    onComplete(userData);
+  };
+ 
+  return (
+    <div style={{ minHeight: "100vh", background: COLORS.cream, direction: "rtl", fontFamily: "'Rubik', sans-serif", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div style={{ background: COLORS.white, borderRadius: 24, padding: "40px 32px", maxWidth: 420, width: "100%", boxShadow: "0 8px 40px rgba(0,0,0,0.1)", textAlign: "center" }}>
+        <Logo size={60} />
+        <h1 style={{ color: COLORS.navy, fontSize: 28, fontWeight: 800, margin: "16px 0 4px" }}>TEENVEST</h1>
+        <p style={{ color: COLORS.gold, fontSize: 15, fontWeight: 600, marginBottom: 8 }}>🚀 המנטור הפיננסי הדיגיטלי שלך</p>
+        <p style={{ color: COLORS.textMuted, fontSize: 13, marginBottom: 28 }}>הירשם כדי לקבל חוויה מותאמת אישית</p>
+ 
+        {/* Email */}
+        <div style={{ marginBottom: 18, textAlign: "right" }}>
+          <label style={{ color: COLORS.navy, fontSize: 13, fontWeight: 600, marginBottom: 6, display: "block" }}>📧 אימייל</label>
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            style={{
+              width: "100%", padding: "14px 16px", borderRadius: 14,
+              border: `2px solid ${COLORS.grayLight}`, fontSize: 15,
+              fontFamily: "'Rubik', sans-serif", outline: "none",
+              direction: "ltr", textAlign: "left",
+              transition: "border-color 0.2s",
+            }}
+            onFocus={e => e.target.style.borderColor = COLORS.gold}
+            onBlur={e => e.target.style.borderColor = COLORS.grayLight}
+          />
+        </div>
+ 
+        {/* Gender */}
+        <div style={{ marginBottom: 24, textAlign: "right" }}>
+          <label style={{ color: COLORS.navy, fontSize: 13, fontWeight: 600, marginBottom: 10, display: "block" }}>👤 מגדר</label>
+          <div style={{ display: "flex", gap: 12 }}>
+            {[
+              { value: "male", label: "👦 זכר", emoji: "♂️" },
+              { value: "female", label: "👧 נקבה", emoji: "♀️" },
+            ].map(opt => (
+              <button
+                key={opt.value}
+                onClick={() => setGender(opt.value)}
+                style={{
+                  flex: 1, padding: "14px 12px", borderRadius: 14, cursor: "pointer",
+                  border: `2px solid ${gender === opt.value ? COLORS.gold : COLORS.grayLight}`,
+                  background: gender === opt.value ? `linear-gradient(135deg, ${COLORS.gold}15, ${COLORS.goldLight}20)` : COLORS.white,
+                  color: COLORS.navy, fontSize: 16, fontWeight: 600,
+                  fontFamily: "'Rubik', sans-serif",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+ 
+        {/* Error */}
+        {error && (
+          <p style={{ color: COLORS.danger, fontSize: 13, marginBottom: 12, fontWeight: 600 }}>⚠️ {error}</p>
+        )}
+ 
+        {/* Submit */}
+        <button onClick={handleSubmit} style={{
+          width: "100%", padding: "16px", borderRadius: 50, border: "none",
+          background: `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldDark})`,
+          color: COLORS.navy, fontSize: 18, fontWeight: 700, cursor: "pointer",
+          fontFamily: "'Rubik', sans-serif",
+          boxShadow: "0 4px 20px rgba(212,168,75,0.4)",
+          transition: "transform 0.2s, box-shadow 0.2s",
+          marginBottom: 16,
+        }}
+          onMouseEnter={e => { e.target.style.transform = "scale(1.03)"; }}
+          onMouseLeave={e => { e.target.style.transform = "scale(1)"; }}
+        >
+          🔥 בוא נתחיל!
+        </button>
+ 
+        <button onClick={onBack} style={{
+          background: "none", border: "none", color: COLORS.textMuted,
+          fontSize: 13, cursor: "pointer", fontFamily: "'Rubik', sans-serif",
+        }}>
+          ← חזרה לעמוד הראשי
+        </button>
+ 
+        <p style={{ color: COLORS.textMuted, fontSize: 11, marginTop: 16, lineHeight: 1.5 }}>
+          ⚠️ למטרות חינוכיות בלבד • תמיד בליווי הורה
+          <br />🔒 הפרטים נשמרים רק במכשיר שלך
+        </p>
+      </div>
+    </div>
+  );
+};
+ 
 // --- CHAT INTERFACE ---
-const ChatInterface = ({ onBack }) => {
+const ChatInterface = ({ onBack, userProfile }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [quickOptions, setQuickOptions] = useState([]);
   const messagesEndRef = useRef(null);
  
+  const isMale = userProfile?.gender === "male";
+  const genderNote = isMale 
+    ? "המשתמש הוא זכר. דבר אליו בלשון זכר בלבד (אתה, שלך, תרצה, תבחר, וכו'). לעולם אל תשתמש בלשון נקבה."
+    : "המשתמשת היא נקבה. דברי אליה בלשון נקבה בלבד (את, שלך, תרצי, תבחרי, וכו'). לעולם אל תשתמש בלשון זכר.";
+  const welcomeName = userProfile?.email ? userProfile.email.split("@")[0] : "";
+  const heyText = isMale ? "היי" : "היי";
+  const chooseText = isMale ? "בחר מספר ובוא נתחיל!" : "בחרי מספר ובואי נתחיל!";
+  const startInvest = isMale ? "להתחיל להשקיע (גם עם 0₪)" : "להתחיל להשקיע (גם עם 0₪)";
+  const startBiz = isMale ? "להקים עסק דיגיטלי בגיל שלך" : "להקים עסק דיגיטלי בגיל שלך";
+  const findTalent = isMale ? "לגלות את הכישרון שיכול להרוויח לך כסף" : "לגלות את הכישרון שיכול להרוויח לך כסף";
+ 
   const SYSTEM_PROMPT = `אתה TEENVEST - המנטור הפיננסי הדיגיטלי הראשון לבני נוער ישראלים בגילאי 15 ומעלה.
  
 רקע מקצועי: צוות מומחים וירטואלי - יועץ AI (9+ שנים), יועץ עסקי (18+ שנים), יועץ השקעות (27+ שנים).
  
+${genderNote}
+ 
 כללים חשובים:
 - דבר בעברית בלבד, בשפה ידידותית ומובנת לבני נוער
+- ${isMale ? "דבר תמיד בלשון זכר - אתה, שלך, תרצה, תוכל, תבחר" : "דברי תמיד בלשון נקבה - את, שלך, תרצי, תוכלי, תבחרי"}
 - השתמש באימוג'ים בכל תשובה
 - הצג תמיד אפשרויות ממוספרות (1️⃣ 2️⃣ 3️⃣ וכו')
 - שאל שאלה אחת בכל פעם וחכה לתשובה
@@ -305,18 +435,8 @@ const ChatInterface = ({ onBack }) => {
 - הדגש תמיד שכל פעולה פיננסית צריכה ליווי הורה
 - היה אובייקטיבי - אל תענה חיובית כברירת מחדל לכל רעיון
 - הודעות קצרות - מקסימום 4 שורות + אפשרויות
-- השתמש בדוגמאות ישראליות (טיול אחרי צבא, לימודים, דירה ראשונה)
+- השתמש בדוגמאות ישראליות (טיול אחרי צבא, לימודים, דירה ראשונה)`;
  
-פתיחת שיחה:
-היי! 🔥 אני TEENVEST - המנטור הפיננסי שלך!
- 
-מה הכי מעניין אותך עכשיו?
-1️⃣ 💰 להתחיל להשקיע (גם עם 0₪)
-2️⃣ 🚀 להקים עסק דיגיטלי בגיל שלך
-3️⃣ 🎯 לגלות את הכישרון שיכול להרוויח לך כסף
-4️⃣ 📊 להבין השקעות (מניות vs קריפטו vs נדל"ן)
- 
-בחר/י מספר ובוא נתחיל! 👇`;
  
   // Parse numbered options from AI responses
   const parseQuickOptions = useCallback((text) => {
@@ -332,7 +452,8 @@ const ChatInterface = ({ onBack }) => {
  
   // Initial welcome message
   useEffect(() => {
-    const welcome = `היי! 🔥 אני TEENVEST - המנטור הפיננסי שלך!
+    const welcome = isMale 
+      ? `${heyText}${welcomeName ? " " + welcomeName : ""}! 🔥 אני TEENVEST - המנטור הפיננסי שלך!
  
 מה הכי מעניין אותך עכשיו?
 1️⃣ 💰 להתחיל להשקיע (גם עם 0₪)
@@ -340,7 +461,16 @@ const ChatInterface = ({ onBack }) => {
 3️⃣ 🎯 לגלות את הכישרון שיכול להרוויח לך כסף
 4️⃣ 📊 להבין השקעות (מניות vs קריפטו vs נדל"ן)
  
-בחר/י מספר ובוא נתחיל! 👇`;
+בחר מספר ובוא נתחיל! 👇`
+      : `${heyText}${welcomeName ? " " + welcomeName : ""}! 🔥 אני TEENVEST - המנטורית הפיננסית שלך!
+ 
+מה הכי מעניין אותך עכשיו?
+1️⃣ 💰 להתחיל להשקיע (גם עם 0₪)
+2️⃣ 🚀 להקים עסק דיגיטלי בגיל שלך
+3️⃣ 🎯 לגלות את הכישרון שיכול להרוויח לך כסף
+4️⃣ 📊 להבין השקעות (מניות vs קריפטו vs נדל"ן)
+ 
+בחרי מספר ובואי נתחיל! 👇`;
     setMessages([{ role: "assistant", content: welcome }]);
     setQuickOptions(parseQuickOptions(welcome));
   }, [parseQuickOptions]);
@@ -530,20 +660,31 @@ const ChatInterface = ({ onBack }) => {
 // --- MAIN APP ---
 export default function TeenVestApp() {
   const [currentView, setCurrentView] = useState("landing");
+  const [userProfile, setUserProfile] = useState(null);
   
-  // Create a blob URL for the background music
-  // The MP3 file should be placed alongside this component
-  // For deployment, replace this with your actual audio file URL
   const [audioUrl, setAudioUrl] = useState(null);
   
   useEffect(() => {
-    // Try to load the music file - adjust path as needed for your deployment
-    // Option 1: If hosted alongside the app
     setAudioUrl("/bg-music.mp3");
-    
-    // Option 2: If you want to use a direct URL, replace with:
-    // setAudioUrl("https://your-domain.com/path/to/music.mp3");
+    // Check if user already registered
+    try {
+      const saved = localStorage.getItem("teenvest_user");
+      if (saved) setUserProfile(JSON.parse(saved));
+    } catch(e) {}
   }, []);
+ 
+  const handleStartChat = () => {
+    if (userProfile) {
+      setCurrentView("chat");
+    } else {
+      setCurrentView("register");
+    }
+  };
+ 
+  const handleRegistration = (profile) => {
+    setUserProfile(profile);
+    setCurrentView("chat");
+  };
  
   return (
     <>
@@ -564,9 +705,11 @@ export default function TeenVestApp() {
  
       {/* Page Content */}
       {currentView === "landing" ? (
-        <LandingPage onStartChat={() => setCurrentView("chat")} />
+        <LandingPage onStartChat={handleStartChat} />
+      ) : currentView === "register" ? (
+        <RegistrationPage onComplete={handleRegistration} onBack={() => setCurrentView("landing")} />
       ) : (
-        <ChatInterface onBack={() => setCurrentView("landing")} />
+        <ChatInterface onBack={() => setCurrentView("landing")} userProfile={userProfile} />
       )}
     </>
   );
